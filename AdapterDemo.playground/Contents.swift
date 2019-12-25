@@ -51,3 +51,38 @@ class GoogleSearchAPI {
                 GoogleSearchResultModel(goName: "拿玻里", goAddress: "江子翠")]
     }
 }
+
+
+//方法一
+struct GoogleSearchResultAdapterModel: SearchResultModel {
+    var name: String
+    var address: String
+}
+
+extension GoogleSearchAPI: SearchAPIProtocol{
+    func searchFood(_ text: String) -> [SearchResultModel] {
+        let oldResults = self.searchStore(text)
+        var results = [GoogleSearchResultAdapterModel]()
+        for resultItem in oldResults {
+            results.append(GoogleSearchResultAdapterModel(name: resultItem.goName, address: resultItem.goAddress))
+        }
+        return results
+    }
+}
+
+//方法二
+class GoogleSearchAPIAdapter: SearchAPIProtocol {
+    
+    let googleSearchAPI = GoogleSearchAPI()
+    
+    func searchFood(_ text: String) -> [SearchResultModel] {
+        let oldResults = googleSearchAPI.searchStore(text)
+        var results = [GoogleSearchResultAdapterModel]()
+        for resultItem in oldResults {
+            results.append(GoogleSearchResultAdapterModel(name: resultItem.goName, address: resultItem.goAddress))
+        }
+        return results
+    }
+}
+
+
